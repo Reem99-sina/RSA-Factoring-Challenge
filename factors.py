@@ -10,8 +10,6 @@ def factorize(n):
     Returns a tuple (p, q), where p and q are the factors.
     If no factorization is possible, returns None.
     """
-    signal.alarm(1)
-    signal.signal(signal.SIGALRM, handler)
     for i in range(2, int(n ** 0.5) + 1):
         if n % i == 0:
             return (i, n // i)
@@ -27,7 +25,7 @@ def factor_file(filename):
     
     with open(filename, "r") as f:
         for line in f:
-            n = int(line.strip())
+            n = int(line.rstrip())
             
             factors = factorize(n)
             if factors is not None:
