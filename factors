@@ -1,22 +1,31 @@
 #!/usr/bin/python3
+import subprocess
 import sys
-def factorize(n):
-    for i in range(2, int(n ** 0.5) + 1):
-        if n % i == 0:
-            return (i, n // i)
-    return None
-def factor_file(filename):
-    with open(filename, "r") as f:
-        for line in f:
-            n = int(line.rstrip())
 
-            factors = factorize(n)
-            if factors is not None:
-                p, q = factors
-                print(f"{n}={p}*{q}")
+# Define a function to check the factorization
+def check_factor(num, p, q):
+    if num != p * q:
+        print(f"Error: {num} != {p} * {q}")
 
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: factors <file>")
-        sys.exit(1)
-    factor_file(sys.argv[1])
+# Read the input file from command line argument
+input_file = sys.argv[1]
+
+# Open the input file and read the numbers line by line
+with open(input_file, 'r') as f:
+    for line in f:
+        # Convert the string to an integer
+        num = int(line.strip())
+
+        # Run the factor command and capture its output
+        output = subprocess.check_output(['factor', str(num)])
+
+        # Parse the output to extract the prime factors
+        factors = list(map(int, output.decode().strip().split(':')[1].split()))
+
+        # Calculate the factorization
+        p = factors[0]
+        q = num // p
+        print(f"{num}={p}*{q}")
+
+        # Check the factorization
+        check_factor(num, p, q)
